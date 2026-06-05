@@ -674,6 +674,14 @@ function toggleTask(kid, id, pts) {
 }
 
 // ── BOSS TOGGLE — kids REQUEST completion, parents APPROVE ───────────────────
+function handleBossClick(el) {
+  var kid  = el.getAttribute('data-kid');
+  var id   = el.getAttribute('data-id');
+  var pts  = parseInt(el.getAttribute('data-pts'), 10);
+  var name = el.getAttribute('data-name');
+  requestBoss(kid, id, pts, name);
+}
+
 function requestBoss(kid, id, pts, name) {
   // Already approved
   if (S.bossCompleted[kid] && S.bossCompleted[kid][id]) return;
@@ -701,23 +709,25 @@ function refreshBossCard(kid, id, pts, name) {
   if (!card) return;
   const approved = !!(S.bossCompleted[kid] && S.bossCompleted[kid][id]);
   const pending  = S.pendingBoss.some(p => p.kid === kid && p.id === id);
-  const chk = card.querySelector('.boss-check');
+  const chk   = card.querySelector('.boss-check');
   const title = card.querySelector('.boss-title');
+  const statusEl = card.querySelector('.boss-status');
+
   if (approved) {
     card.classList.add('done-boss');
-    title.classList.add('done-boss');
-    chk.className = 'boss-check done';
-    chk.textContent = '✓';
+    if (title) title.classList.add('done-boss');
+    if (chk) { chk.className = 'boss-check done'; chk.innerHTML = '&#10003;'; }
+    if (statusEl) statusEl.innerHTML = '<span style="font-size:11px;font-weight:900;color:#1D9E75;">&#10003; Approved!</span>';
   } else if (pending) {
     card.classList.remove('done-boss');
-    title.classList.remove('done-boss');
-    chk.className = 'boss-check pending-check';
-    chk.textContent = '⏳';
+    if (title) title.classList.remove('done-boss');
+    if (chk) { chk.className = 'boss-check pending-check'; chk.innerHTML = '&#9203;'; }
+    if (statusEl) statusEl.innerHTML = '<span style="font-size:11px;font-weight:900;color:#EF9F27;">&#9203; Waiting for parent approval &mdash; tap to cancel</span>';
   } else {
     card.classList.remove('done-boss');
-    title.classList.remove('done-boss');
-    chk.className = 'boss-check';
-    chk.textContent = '';
+    if (title) title.classList.remove('done-boss');
+    if (chk) { chk.className = 'boss-check'; chk.innerHTML = ''; }
+    if (statusEl) statusEl.innerHTML = '<span style="font-size:11px;font-weight:700;color:var(--text-tertiary);">Tap when completed!</span>';
   }
 }
 
@@ -817,36 +827,46 @@ function buildStreakSection(kid) {
 
 // ── BOSS SECTION ─────────────────────────────────────────────────────────────
 function buildBossSection(kid) {
-  return `<div style="margin-bottom:14px;">
-    <div class="section-label" style="margin-bottom:10px;">Boss challenges</div>
-    ${BOSS[kid].map(b => {
-      const approved = !!(S.bossCompleted[kid] && S.bossCompleted[kid][b.id]);
-      const pending  = S.pendingBoss.some(p => p.kid === kid && p.id === b.id);
-      const chkClass = approved ? 'boss-check done' : pending ? 'boss-check pending-check' : 'boss-check';
-      const chkIcon  = approved ? '✓' : pending ? '⏳' : '';
-      const statusLabel = approved
-        ? '<span style="font-size:11px;font-weight:900;color:#1D9E75;">✓ Approved!</span>'
-        : pending
-        ? '<span style="font-size:11px;font-weight:900;color:#EF9F27;">⏳ Waiting for parent approval — tap to cancel</span>'
-        : '<span style="font-size:11px;font-weight:700;color:var(--text-tertiary);">Tap when completed!</span>';
-      return `<div class="boss-card \${approved?'done-boss':''}" id="boss-card-\${b.id}"
-        onclick="requestBoss('\${kid}','\${b.id}',\${b.pts},\${JSON.stringify(b.name)})">
-        <div style="display:flex;align-items:flex-start;gap:12px;">
-          <span style="font-size:32px;flex-shrink:0;line-height:1.1;">\${b.emoji}</span>
-          <div style="flex:1;">
-            <div class="boss-badge">Boss Challenge</div>
-            <div class="boss-title \${approved?'done-boss':''}">\${b.name}</div>
-            <div class="boss-desc">\${b.desc}</div>
-            <div style="margin-top:5px;">\${statusLabel}</div>
-          </div>
-          <div style="display:flex;flex-direction:column;align-items:center;gap:5px;flex-shrink:0;">
-            <div class="\${chkClass}">\${chkIcon}</div>
-            <span class="boss-pts">+\${b.pts}</span>
-          </div>
-        </div>
-      </div>`;
-    }).join('')}
-  </div>`;
+  var cards = BOSS[kid].map(function(b) {
+    var approved = !!(S.bossCompleted[kid] && S.bossCompleted[kid][b.id]);
+    var pending  = S.pendingBoss.some(function(p){ return p.kid === kid && p.id === b.id; });
+    var chkClass = approved ? 'boss-check done' : pending ? 'boss-check pending-check' : 'boss-check';
+    var chkIcon  = approved ? '&#10003;' : pending ? '&#9203;' : '';
+    var statusLabel = approved
+      ? '<span style="font-size:11px;font-weight:900;color:#1D9E75;">&#10003; Approved!</span>'
+      : pending
+      ? '<span style="font-size:11px;font-weight:900;color:#EF9F27;">&#9203; Waiting for parent approval &#8212; tap to cancel</span>'
+      : '<span style="font-size:11px;font-weight:700;color:var(--text-tertiary);">Tap when complete &#8212; submit for approval!</span>';
+    // Safe name stored in data-attr — no quote escaping in onclick needed
+    var safeName = b.name.replace(/'/g, '&#39;');
+    return '<div'
+      + ' class="boss-card ' + (approved ? 'done-boss' : '') + '"'
+      + ' id="boss-card-' + b.id + '"'
+      + ' data-kid="' + kid + '"'
+      + ' data-id="' + b.id + '"'
+      + ' data-pts="' + b.pts + '"'
+      + ' data-name="' + safeName + '"'
+      + ' onclick="handleBossClick(this)"'
+      + '>'
+      + '<div style="display:flex;align-items:flex-start;gap:12px;">'
+      + '<span style="font-size:32px;flex-shrink:0;line-height:1.1;">' + b.emoji + '</span>'
+      + '<div style="flex:1;">'
+      + '<div class="boss-badge">Boss Challenge</div>'
+      + '<div class="boss-title ' + (approved ? 'done-boss' : '') + '">' + b.name + '</div>'
+      + '<div class="boss-desc">' + b.desc + '</div>'
+      + '<div class="boss-status" style="margin-top:6px;">' + statusLabel + '</div>'
+      + '</div>'
+      + '<div style="display:flex;flex-direction:column;align-items:center;gap:5px;flex-shrink:0;">'
+      + '<div class="' + chkClass + '">' + chkIcon + '</div>'
+      + '<span class="boss-pts">+' + b.pts + '</span>'
+      + '</div>'
+      + '</div>'
+      + '</div>';
+  }).join('');
+  return '<div style="margin-bottom:14px;">'
+    + '<div class="section-label" style="margin-bottom:10px;">Boss challenges</div>'
+    + cards
+    + '</div>';
 }
 
 // ── KID VIEW ─────────────────────────────────────────────────────────────────
