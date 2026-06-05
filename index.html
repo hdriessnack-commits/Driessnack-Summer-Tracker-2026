@@ -1,0 +1,1322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Driessnack Summer Tracker 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;900&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css" rel="stylesheet">
+<style>
+  :root {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f5f4f0;
+    --bg-tertiary: #eeede9;
+    --text-primary: #1a1a18;
+    --text-secondary: #6b6a65;
+    --text-tertiary: #9e9d99;
+    --border-light: rgba(0,0,0,0.10);
+    --border-mid: rgba(0,0,0,0.18);
+    --radius-md: 12px;
+    --radius-lg: 20px;
+    --radius-xl: 28px;
+    --radius-pill: 999px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg-primary: #1e1e1c;
+      --bg-secondary: #2a2a28;
+      --bg-tertiary: #333330;
+      --text-primary: #f0ede6;
+      --text-secondary: #a09e99;
+      --text-tertiary: #6b6a65;
+      --border-light: rgba(255,255,255,0.10);
+      --border-mid: rgba(255,255,255,0.18);
+    }
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Nunito', system-ui, sans-serif;
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    min-height: 100vh;
+  }
+  .app-shell {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 16px 16px 60px;
+  }
+  .app-header {
+    text-align: center;
+    padding: 20px 0 16px;
+  }
+  .app-title {
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--text-primary);
+    letter-spacing: -0.5px;
+  }
+  .app-date {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-secondary);
+    margin-top: 4px;
+  }
+
+  /* TAB BAR */
+  .tab-bar {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-xl);
+    padding: 6px;
+  }
+  .tab {
+    flex: 1;
+    min-width: 60px;
+    padding: 9px 10px;
+    border-radius: var(--radius-lg);
+    border: none;
+    font-size: 13px;
+    font-weight: 900;
+    font-family: 'Nunito', sans-serif;
+    cursor: pointer;
+    background: transparent;
+    color: var(--text-secondary);
+    transition: all 0.18s;
+    text-align: center;
+  }
+  .tab.active {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.10);
+  }
+  .tab:hover:not(.active) { background: var(--bg-tertiary); }
+
+  /* CARDS */
+  .card {
+    background: var(--bg-primary);
+    border: 1.5px solid var(--border-light);
+    border-radius: var(--radius-xl);
+    padding: 18px 20px;
+    margin-bottom: 14px;
+  }
+  .card-secondary {
+    background: var(--bg-secondary);
+    border: none;
+    border-radius: var(--radius-xl);
+    padding: 16px 18px;
+    margin-bottom: 14px;
+  }
+
+  /* SECTION LABEL */
+  .section-label {
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    margin-bottom: 12px;
+  }
+
+  /* METRIC CARDS */
+  .metric-grid { display: grid; gap: 8px; margin-bottom: 14px; }
+  .metric-grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+  .metric-grid-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+  .metric-card {
+    background: var(--bg-secondary);
+    border-radius: var(--radius-lg);
+    padding: 12px 10px;
+    text-align: center;
+  }
+  .metric-val {
+    font-size: 24px;
+    font-weight: 900;
+    color: var(--text-primary);
+    line-height: 1.1;
+  }
+  .metric-lbl {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text-secondary);
+    margin-top: 3px;
+  }
+
+  /* AVATAR */
+  .kid-avatar {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; font-weight: 900;
+    flex-shrink: 0;
+  }
+  .av-evie { background: #EEEDFE; color: #3C3489; }
+  .av-fiona { background: #E1F5EE; color: #085041; }
+  .av-lucy { background: #FAEEDA; color: #633806; }
+
+  /* TASKS */
+  .task-row {
+    display: flex; align-items: center; gap: 12px;
+    padding: 11px 0;
+    border-bottom: 1.5px solid var(--border-light);
+    cursor: pointer;
+    transition: transform 0.12s;
+    position: relative;
+    border-radius: 4px;
+  }
+  .task-row:last-child { border-bottom: none; }
+  .task-row:hover { transform: scale(1.01); }
+  .task-check {
+    width: 32px; height: 32px; border-radius: 50%;
+    border: 2.5px solid var(--border-mid);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; transition: all 0.2s;
+    font-size: 16px; font-weight: 900; color: transparent;
+  }
+  .task-check.done { background: #1D9E75; border-color: #1D9E75; color: #fff; }
+  .task-name { font-size: 15px; font-weight: 700; color: var(--text-primary); }
+  .task-name.done { text-decoration: line-through; color: var(--text-tertiary); }
+  .task-pts { font-size: 14px; font-weight: 900; color: var(--text-secondary); flex-shrink: 0; }
+  .daily-tag { font-size: 10px; font-weight: 700; color: var(--text-tertiary); margin-left: 5px; }
+
+  /* CATEGORY BADGES */
+  .cat-badge {
+    display: inline-block; padding: 2px 9px;
+    border-radius: var(--radius-pill); font-size: 10px; font-weight: 900;
+    margin-top: 3px;
+  }
+  .cat-chore { background: #EAF3DE; color: #27500A; }
+  .cat-school { background: #E6F1FB; color: #0C447C; }
+  .cat-skill { background: #EEEDFE; color: #3C3489; }
+  .cat-play { background: #FAEEDA; color: #633806; }
+  .cat-screen { background: #F1EFE8; color: #444441; }
+
+  /* PROGRESS BAR */
+  .progress-wrap { background: var(--bg-secondary); border-radius: 20px; height: 9px; overflow: hidden; margin-top: 5px; }
+  .progress-fill { height: 100%; border-radius: 20px; transition: width 0.4s ease; }
+
+  /* REWARDS */
+  .reward-row {
+    display: flex; align-items: center; gap: 10px;
+    background: var(--bg-secondary); border-radius: var(--radius-lg);
+    padding: 11px 14px; margin-bottom: 8px;
+  }
+  .reward-name { font-size: 14px; font-weight: 700; color: var(--text-primary); flex: 1; }
+  .reward-cost { font-size: 13px; font-weight: 900; color: var(--text-secondary); }
+  .badge-unlock { font-size: 11px; font-weight: 900; padding: 3px 10px; border-radius: var(--radius-pill); background: #EAF3DE; color: #27500A; }
+  .badge-locked { font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: var(--radius-pill); background: var(--bg-secondary); color: var(--text-tertiary); border: 1.5px solid var(--border-light); }
+
+  /* STREAK */
+  .streak-dot {
+    width: 36px; height: 36px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; border: 2.5px solid var(--border-light);
+    transition: all 0.3s;
+  }
+  .streak-dot.on { border-color: #EF9F27; background: #FAEEDA; }
+  .streak-dot.today-dot { border-color: #378ADD; background: #E6F1FB; }
+  .flame { display: inline-block; animation: flicker 0.9s ease-in-out infinite alternate; }
+  @keyframes flicker { 0%{transform:scale(1) rotate(-3deg);} 100%{transform:scale(1.15) rotate(3deg);} }
+  .streak-btn {
+    display: inline-block; padding: 9px 22px;
+    border-radius: var(--radius-pill); border: 2px solid #EF9F27;
+    background: #FAEEDA; color: #633806;
+    font-size: 14px; font-weight: 900; font-family: 'Nunito', sans-serif;
+    cursor: pointer; margin-top: 10px; transition: transform 0.12s;
+  }
+  .streak-btn:hover { transform: scale(1.03); }
+
+  /* BOSS CHALLENGES */
+  .boss-card {
+    border: 2.5px solid #E24B4A; border-radius: var(--radius-xl);
+    padding: 14px 16px; margin-bottom: 10px;
+    background: var(--bg-primary); cursor: pointer;
+    transition: transform 0.12s; position: relative;
+  }
+  .boss-card:hover { transform: scale(1.01); }
+  .boss-card.done-boss { opacity: 0.6; border-color: var(--border-light); }
+  .boss-badge { display: inline-block; padding: 3px 12px; border-radius: var(--radius-pill); font-size: 11px; font-weight: 900; background: #FCEBEB; color: #791F1F; margin-bottom: 6px; }
+  .boss-title { font-size: 16px; font-weight: 900; color: var(--text-primary); }
+  .boss-title.done-boss { text-decoration: line-through; color: var(--text-tertiary); }
+  .boss-desc { font-size: 12px; font-weight: 700; color: var(--text-secondary); margin-top: 3px; line-height: 1.5; }
+  .boss-pts { font-size: 17px; font-weight: 900; color: #E24B4A; }
+  .boss-check {
+    width: 38px; height: 38px; border-radius: 50%;
+    border: 2.5px solid #E24B4A;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; transition: all 0.25s;
+    font-size: 18px; font-weight: 900; color: transparent;
+  }
+  .boss-check.done { background: #E24B4A; border-color: #E24B4A; color: #fff; }
+  .boss-check.pending-check { background: #FAEEDA; border-color: #EF9F27; color: #633806; font-size:14px; }
+
+  /* LEADERBOARD */
+  .lb-podium {
+    display: grid; grid-template-columns: 1fr 1.15fr 1fr;
+    gap: 10px; margin-bottom: 20px; align-items: end;
+  }
+  .lb-pod {
+    border-radius: var(--radius-xl); padding: 16px 10px;
+    text-align: center; border: 2px solid var(--border-light);
+    background: var(--bg-primary);
+  }
+  .lb-pod.gold { border-color: #EF9F27; background: #FAEEDA; }
+  .lb-pod.silver { border-color: #B4B2A9; background: var(--bg-secondary); }
+  .lb-pod.bronze { border-color: #5DCAA5; background: #E1F5EE; }
+  .lb-medal { font-size: 30px; margin-bottom: 6px; }
+  .lb-name { font-size: 17px; font-weight: 900; color: var(--text-primary); }
+  .lb-pts-big { font-size: 28px; font-weight: 900; margin-top: 4px; }
+  .lb-sub { font-size: 12px; font-weight: 700; color: var(--text-secondary); margin-top: 3px; }
+
+  /* PARTICLES */
+  .particle { position: fixed; pointer-events: none; z-index: 9999; font-size: 22px; }
+
+  /* BOSS OVERLAY */
+  #boss-overlay {
+    position: fixed; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    pointer-events: none; opacity: 0;
+    transition: opacity 0.3s; z-index: 8000;
+    background: rgba(0,0,0,0.0);
+  }
+  #boss-overlay.show { opacity: 1; }
+  #boss-msg {
+    font-size: 40px; font-weight: 900; font-family: 'Nunito', sans-serif;
+    color: #E24B4A; text-align: center;
+    transform: scale(0); transition: transform 0.4s cubic-bezier(.36,1.56,.64,1);
+    text-shadow: 0 2px 20px rgba(226,75,74,0.25);
+  }
+  #boss-overlay.show #boss-msg { transform: scale(1); }
+  #boss-sub {
+    font-size: 18px; font-weight: 900; font-family: 'Nunito', sans-serif;
+    color: var(--text-secondary); text-align: center;
+    margin-top: 10px; opacity: 0; transition: opacity 0.4s 0.3s;
+  }
+  #boss-overlay.show #boss-sub { opacity: 1; }
+
+  /* WEEK GRID (dashboard) */
+  .week-grid { display: grid; grid-template-columns: repeat(7, minmax(0,1fr)); gap: 4px; margin-top: 8px; }
+  .day-cell { background: var(--bg-secondary); border-radius: 10px; padding: 6px 4px; min-height: 64px; }
+  .day-hdr { font-size: 9px; font-weight: 900; color: var(--text-tertiary); text-align: center; margin-bottom: 4px; }
+  .day-task { font-size: 9px; font-weight: 700; padding: 2px 4px; border-radius: 5px; margin-bottom: 2px; line-height: 1.3; }
+
+  /* FOCUS BANNER */
+  .focus-banner {
+    background: var(--bg-secondary); border-radius: var(--radius-lg);
+    padding: 11px 14px; margin-bottom: 14px;
+    font-size: 13px; font-weight: 700; color: var(--text-secondary);
+  }
+
+  /* ANIMATIONS */
+  .bounce-in { animation: bounceIn 0.35s cubic-bezier(.36,1.56,.64,1) forwards; }
+  @keyframes bounceIn { 0%{transform:scale(0.6);}100%{transform:scale(1);} }
+  .flash-green { animation: flashG 0.5s ease forwards; }
+  @keyframes flashG { 0%{background:transparent;}40%{background:#d4f7e7;}100%{background:transparent;} }
+  .flash-boss { animation: flashB 0.6s ease forwards; }
+  @keyframes flashB { 0%{background:transparent;}40%{background:#FCEBEB;}100%{background:transparent;} }
+
+  /* DASHBOARD SLIDERS */
+  .pct-row { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+  .pct-row label { font-size: 12px; font-weight: 700; color: var(--text-secondary); width: 64px; flex-shrink: 0; }
+  .pct-row input[type=range] { flex: 1; }
+  .pct-row .pct-val { font-size: 12px; font-weight: 900; color: var(--text-primary); width: 34px; text-align: right; }
+
+  details summary { cursor: pointer; font-size: 12px; font-weight: 700; color: var(--text-secondary); list-style: none; padding: 6px 0; }
+  details summary::-webkit-details-marker { display: none; }
+
+  /* CUSTOM TASK FORM */
+  .form-group { margin-bottom: 14px; }
+  .form-label { display: block; font-size: 12px; font-weight: 900; color: var(--text-secondary); letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 6px; }
+  .form-input {
+    width: 100%; padding: 11px 14px;
+    border-radius: var(--radius-lg); border: 2px solid var(--border-light);
+    background: var(--bg-secondary); color: var(--text-primary);
+    font-size: 15px; font-weight: 700; font-family: 'Nunito', sans-serif;
+    outline: none; transition: border-color 0.15s;
+  }
+  .form-input:focus { border-color: var(--border-mid); }
+  .form-select {
+    width: 100%; padding: 11px 14px;
+    border-radius: var(--radius-lg); border: 2px solid var(--border-light);
+    background: var(--bg-secondary); color: var(--text-primary);
+    font-size: 15px; font-weight: 700; font-family: 'Nunito', sans-serif;
+    outline: none; cursor: pointer; appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b6a65' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 12px center;
+    padding-right: 36px;
+  }
+  .form-select:focus { border-color: var(--border-mid); }
+  .pts-display {
+    display: flex; align-items: center; justify-content: space-between;
+    background: var(--bg-secondary); border-radius: var(--radius-lg);
+    padding: 10px 14px; margin-top: 8px;
+  }
+  .pts-big { font-size: 22px; font-weight: 900; color: var(--text-primary); }
+  .pts-dollar { font-size: 14px; font-weight: 700; color: var(--text-secondary); }
+  .add-btn {
+    width: 100%; padding: 13px;
+    border-radius: var(--radius-xl); border: none;
+    background: #1D9E75; color: #fff;
+    font-size: 16px; font-weight: 900; font-family: 'Nunito', sans-serif;
+    cursor: pointer; transition: transform 0.12s, background 0.15s;
+    margin-top: 4px;
+  }
+  .add-btn:hover { background: #178a65; transform: scale(1.01); }
+  .add-btn:disabled { background: var(--bg-tertiary); color: var(--text-tertiary); cursor: not-allowed; transform: none; }
+  .custom-task-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 0; border-bottom: 1.5px solid var(--border-light);
+  }
+  .custom-task-row:last-child { border-bottom: none; }
+  .delete-btn {
+    width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid var(--border-light);
+    background: transparent; color: var(--text-tertiary);
+    font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; transition: all 0.15s;
+  }
+  .delete-btn:hover { border-color: #E24B4A; color: #E24B4A; background: #FCEBEB; }
+  .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+  .action-btn {
+    padding: 10px 24px; border-radius: var(--radius-pill);
+    font-size: 14px; font-weight: 900; font-family: 'Nunito', sans-serif;
+    cursor: pointer; border: 2px solid var(--border-mid);
+    background: var(--bg-primary); color: var(--text-primary);
+    transition: transform 0.12s;
+  }
+  .action-btn:hover { transform: scale(1.02); }
+
+  @media (max-width: 480px) {
+    .metric-grid-4 { grid-template-columns: 1fr 1fr; }
+    .lb-pts-big { font-size: 22px; }
+    .lb-name { font-size: 14px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="boss-overlay">
+  <div id="boss-msg">BOSS DEFEATED!</div>
+  <div id="boss-sub"></div>
+</div>
+
+<div class="app-shell">
+  <div class="app-header">
+    <div class="app-title">☀️ Summer Tracker 2026</div>
+    <div class="app-date" id="header-date"></div>
+  </div>
+
+  <div class="tab-bar">
+    <button class="tab active" onclick="showView('leaderboard',this)">🏆 Family</button>
+    <button class="tab" onclick="showView('evie',this)">E Evie</button>
+    <button class="tab" onclick="showView('fiona',this)">F Fiona</button>
+    <button class="tab" onclick="showView('lucy',this)">L Lucy</button>
+    <button class="tab" onclick="showView('dashboard',this)">⚙️ Parent</button>
+  </div>
+
+  <div id="view-leaderboard"></div>
+  <div id="view-evie" style="display:none;"></div>
+  <div id="view-fiona" style="display:none;"></div>
+  <div id="view-lucy" style="display:none;"></div>
+  <div id="view-dashboard" style="display:none;"></div>
+</div>
+
+<script>
+// ── DATA ────────────────────────────────────────────────────────────────────
+const RATE = 0.05;
+const ANIMALS = ['🐬','🦋','🐸','🌟','🦄','🐙','🎉','🌈','🐼','🦊','🐨','✨','🎊','🐝','🦕'];
+const BOSS_BURST = ['💥','🔥','⭐','🏆','👑','🎯','🚀','💎','🌠','🎆','🎇','✨','🥇','💪','🎉'];
+
+const CAT_COLORS = {
+  chore:  { bar: '#639922', badge: 'cat-chore' },
+  school: { bar: '#378ADD', badge: 'cat-school' },
+  skill:  { bar: '#7F77DD', badge: 'cat-skill' },
+  play:   { bar: '#EF9F27', badge: 'cat-play' },
+  screen: { bar: '#888780', badge: 'cat-screen' },
+};
+
+const CAT_SCHEDULE = {
+  evie:  ['chore','school','skill','play','screen','play','skill'],
+  fiona: ['chore','school','skill','play','screen','play','skill'],
+  lucy:  ['chore','school','play','skill','play','screen','play'],
+};
+
+const TASKS = {
+  evie: [
+    {id:'e1', name:'Make bed',                  cat:'chore',  pts:5,  daily:true},
+    {id:'e2', name:'Load/unload dishwasher',     cat:'chore',  pts:10, daily:false},
+    {id:'e3', name:'Vacuum a room',              cat:'chore',  pts:15, daily:false},
+    {id:'e4', name:'Weed garden 15 min',         cat:'chore',  pts:15, daily:false},
+    {id:'e5', name:'Read 30 minutes',            cat:'school', pts:10, daily:true},
+    {id:'e6', name:'Khan Academy 20 min',        cat:'school', pts:15, daily:false},
+    {id:'e7', name:'Write in journal',           cat:'school', pts:10, daily:false},
+    {id:'e8', name:'Cook a full meal',           cat:'skill',  pts:40, daily:false},
+    {id:'e9', name:'Sew a basic seam',           cat:'skill',  pts:30, daily:false},
+    {id:'e10',name:'Tie 3 different knots',      cat:'skill',  pts:25, daily:false},
+    {id:'e11',name:'Start a fire (supervised)',  cat:'skill',  pts:35, daily:false},
+    {id:'e12',name:'Change a bike tire',         cat:'skill',  pts:25, daily:false},
+    {id:'e13',name:'Free play / outdoor time',   cat:'play',   pts:0,  daily:true},
+    {id:'e14',name:'Screen time (earned)',       cat:'screen', pts:0,  daily:false},
+  ],
+  fiona: [
+    {id:'f1', name:'Make bed',                   cat:'chore',  pts:5,  daily:true},
+    {id:'f2', name:'Set & clear dinner table',   cat:'chore',  pts:8,  daily:true},
+    {id:'f3', name:'Wipe bathroom sink',         cat:'chore',  pts:10, daily:false},
+    {id:'f4', name:'Fold & put away laundry',    cat:'chore',  pts:12, daily:false},
+    {id:'f5', name:'Read 20 minutes',            cat:'school', pts:10, daily:true},
+    {id:'f6', name:'Math practice 20 min',       cat:'school', pts:12, daily:false},
+    {id:'f7', name:'Handwriting practice',       cat:'school', pts:8,  daily:false},
+    {id:'f8', name:'Cook a simple recipe',       cat:'skill',  pts:30, daily:false},
+    {id:'f9', name:'Sew a button',               cat:'skill',  pts:20, daily:false},
+    {id:'f10',name:'Tie 2 different knots',      cat:'skill',  pts:18, daily:false},
+    {id:'f11',name:'Plant something & water it', cat:'skill',  pts:20, daily:false},
+    {id:'f12',name:'Write & mail a letter',      cat:'skill',  pts:15, daily:false},
+    {id:'f13',name:'Free play / outdoor time',   cat:'play',   pts:0,  daily:true},
+    {id:'f14',name:'Screen time (earned)',       cat:'screen', pts:0,  daily:false},
+  ],
+  lucy: [
+    {id:'l1', name:'Make bed (help ok!)',         cat:'chore',  pts:5,  daily:true},
+    {id:'l2', name:'Put toys away',              cat:'chore',  pts:5,  daily:true},
+    {id:'l3', name:'Help set table',             cat:'chore',  pts:5,  daily:true},
+    {id:'l4', name:'Match & sort socks',         cat:'chore',  pts:8,  daily:false},
+    {id:'l5', name:'Read / read-aloud 15 min',   cat:'school', pts:8,  daily:true},
+    {id:'l6', name:'Practice writing letters',   cat:'school', pts:8,  daily:false},
+    {id:'l7', name:'Count to 100',               cat:'school', pts:10, daily:false},
+    {id:'l8', name:'Help bake & measure',        cat:'skill',  pts:15, daily:false},
+    {id:'l9', name:'Learn to tie shoes',         cat:'skill',  pts:20, daily:false},
+    {id:'l10',name:'Draw & describe a picture',  cat:'skill',  pts:8,  daily:false},
+    {id:'l11',name:'Water a plant',              cat:'skill',  pts:5,  daily:false},
+    {id:'l12',name:'Free play / outdoor time',   cat:'play',   pts:0,  daily:true},
+    {id:'l13',name:'Screen time (earned)',       cat:'screen', pts:0,  daily:false},
+  ],
+};
+
+const BOSS = {
+  evie: [
+    {id:'be1', name:'Master Chef Night',     desc:'Plan the menu, cook dinner for the whole family, AND clean up after.',                    pts:150, emoji:'👩‍🍳'},
+    {id:'be2', name:'7-Day Reading Streak',  desc:'Read every single day for a full week — no skips!',                                        pts:120, emoji:'📚'},
+    {id:'be3', name:'Survival Skills Badge', desc:'Tie 5 knots, start a fire, and change the bike tire — all in one week.',                   pts:200, emoji:'🏕️'},
+    {id:'be4', name:'Operation Deep Clean',  desc:'Vacuum, wipe surfaces, and organize your bedroom top to bottom.',                          pts:130, emoji:'🧹'},
+  ],
+  fiona: [
+    {id:'bf1', name:'Sous Chef Showdown',    desc:'Cook two different recipes in one week — breakfast AND dinner.',                            pts:130, emoji:'🍳'},
+    {id:'bf2', name:'Green Thumb Champion',  desc:'Plant something, water it every day for a week, and write about its growth.',              pts:110, emoji:'🌱'},
+    {id:'bf3', name:'7-Day Reading Streak',  desc:'Read every day for a full week — no skips!',                                               pts:100, emoji:'📖'},
+    {id:'bf4', name:'Pen Pal Pro',           desc:'Write and mail a letter AND draw a picture to send with it.',                              pts:90,  emoji:'✉️'},
+  ],
+  lucy: [
+    {id:'bl1', name:'Big Helper Week',       desc:'Complete all daily chores every single day for a full week!',                              pts:100, emoji:'🌟'},
+    {id:'bl2', name:'Baking Boss',           desc:'Help bake two different things in one week.',                                              pts:90,  emoji:'🧁'},
+    {id:'bl3', name:'Shoe Tie Master',       desc:'Tie your shoes by yourself 5 days in a row.',                                             pts:80,  emoji:'👟'},
+    {id:'bl4', name:'Story Time Star',       desc:'Read or listen to a book every day for 7 days.',                                          pts:85,  emoji:'🦋'},
+  ],
+};
+
+const REWARDS = {
+  evie:  [{name:'$5 spending money',cost:100},{name:'Nail polish run',cost:150},{name:'Ear piercing upgrade',cost:300},{name:'Urban Air trip',cost:400},{name:'Slick City trip',cost:500},{name:'$25 shopping budget',cost:500}],
+  fiona: [{name:'$5 spending money',cost:100},{name:'Art supply haul',cost:150},{name:'Ear piercing upgrade',cost:250},{name:'Urban Air trip',cost:350},{name:'Slick City trip',cost:400},{name:'$20 shopping budget',cost:400}],
+  lucy:  [{name:'$3 spending money',cost:60},{name:'Sticker & craft pack',cost:80},{name:'Pick dinner tonight',cost:100},{name:'Movie night pick',cost:120},{name:'Slick City trip',cost:300}],
+};
+
+// ── STATE ────────────────────────────────────────────────────────────────────
+const DEFAULT_STATE = {
+  version: 4,
+  todayKey: '',
+  todayCompleted: { evie:{}, fiona:{}, lucy:{} },
+  bossCompleted:  { evie:{}, fiona:{}, lucy:{} },
+  allTimePts:     { evie:0,  fiona:0,  lucy:0  },
+  weekStreak:     { evie:[false,false,false,false,false,false,false], fiona:[false,false,false,false,false,false,false], lucy:[false,false,false,false,false,false,false] },
+  currentStreak:  { evie:0,  fiona:0,  lucy:0  },
+  allTimeStreak:  { evie:0,  fiona:0,  lucy:0  },
+  customTasks:    { evie:[], fiona:[], lucy:[] },
+  pendingBoss:    [],
+  pcts: {
+    evie:  {chore:25,school:25,skill:25,play:20,screen:5},
+    fiona: {chore:25,school:25,skill:25,play:20,screen:5},
+    lucy:  {chore:25,school:20,skill:20,play:30,screen:5},
+  },
+};
+
+let S = loadState();
+
+function loadState() {
+  try {
+    const saved = localStorage.getItem('summerTracker2026');
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      // migrate v2/v3 to v4
+      if (parsed.version === 2 || parsed.version === 3) {
+        parsed.version = 4;
+        if (!parsed.customTasks) parsed.customTasks = { evie:[], fiona:[], lucy:[] };
+        if (!parsed.pendingBoss) parsed.pendingBoss = [];
+        return parsed;
+      }
+      if (parsed.version === DEFAULT_STATE.version) return parsed;
+    }
+  } catch(e) {}
+  return JSON.parse(JSON.stringify(DEFAULT_STATE));
+}
+
+function saveState() {
+  try { localStorage.setItem('summerTracker2026', JSON.stringify(S)); } catch(e) {}
+}
+
+// ── DATE HELPERS ─────────────────────────────────────────────────────────────
+function todayKey() {
+  const d = new Date();
+  return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
+}
+function todayDOW() { return new Date().getDay(); }
+function formatDate() {
+  return new Date().toLocaleDateString('en-US', {weekday:'long',month:'long',day:'numeric',year:'numeric'});
+}
+function catLabel(c) {
+  return {chore:'Chore',school:'Scholastic',skill:'Life Skill',play:'Play',screen:'Screen'}[c] || c;
+}
+function dollar(pts) { return (pts * RATE).toFixed(2); }
+
+// ── DAY RESET ────────────────────────────────────────────────────────────────
+function checkDayReset() {
+  const key = todayKey();
+  if (S.todayKey !== key) {
+    S.todayKey = key;
+    ['evie','fiona','lucy'].forEach(kid => { S.todayCompleted[kid] = {}; });
+    saveState();
+  }
+}
+
+// ── TASKS FOR TODAY ──────────────────────────────────────────────────────────
+function todayTasks(kid) {
+  const dow = todayDOW();
+  const cat = CAT_SCHEDULE[kid][dow];
+  const shown = new Set(TASKS[kid].filter(t => t.daily).map(t => t.id));
+  TASKS[kid].filter(t => t.cat === cat && !t.daily).forEach(t => shown.add(t.id));
+  const base = TASKS[kid].filter(t => shown.has(t.id));
+  const custom = (S.customTasks[kid] || []);
+  return [...base, ...custom];
+}
+
+// ── PARTICLES ────────────────────────────────────────────────────────────────
+function launchParticles(el, isBoss) {
+  const set = isBoss ? BOSS_BURST : ANIMALS;
+  const count = isBoss ? 20 : 8;
+  const rect = el.getBoundingClientRect();
+  const cx = rect.left + rect.width / 2;
+  const cy = rect.top + rect.height / 2;
+  for (let i = 0; i < count; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.textContent = set[Math.floor(Math.random() * set.length)];
+    const angle = (360 / count) * i + (Math.random() * 20 - 10);
+    const rad = angle * Math.PI / 180;
+    const dist = (isBoss ? 100 : 60) + Math.random() * (isBoss ? 80 : 40);
+    const tx = Math.cos(rad) * dist;
+    const ty = Math.sin(rad) * dist - (isBoss ? 100 : 70);
+    p.style.cssText = `left:${cx}px;top:${cy}px;font-size:${isBoss?28:22}px;transform:translate(-50%,-50%);`;
+    document.body.appendChild(p);
+    p.animate([
+      {opacity:1, transform:`translate(-50%,-50%) scale(1) rotate(0deg)`},
+      {opacity:0, transform:`translate(calc(-50% + ${tx}px), calc(-50% + ${ty}px)) scale(${isBoss?2:1.5}) rotate(${Math.random()*120-60}deg)`}
+    ], {duration: (isBoss?1400:900)+Math.random()*400, delay: isBoss?i*40:0, easing:'ease-out', fill:'forwards'})
+    .onfinish = () => p.remove();
+  }
+  if (isBoss) {
+    for (let w = 0; w < 3; w++) {
+      setTimeout(() => {
+        for (let i = 0; i < 8; i++) {
+          const p2 = document.createElement('div');
+          p2.className = 'particle';
+          p2.textContent = BOSS_BURST[Math.floor(Math.random() * BOSS_BURST.length)];
+          const ox = cx + (Math.random()-0.5)*280;
+          const oy = cy + (Math.random()-0.5)*140;
+          const r2 = Math.random()*Math.PI*2;
+          const d2 = 60 + Math.random()*60;
+          p2.style.cssText = `left:${ox}px;top:${oy}px;font-size:24px;transform:translate(-50%,-50%);`;
+          document.body.appendChild(p2);
+          p2.animate([
+            {opacity:1, transform:`translate(-50%,-50%) scale(1)`},
+            {opacity:0, transform:`translate(calc(-50% + ${Math.cos(r2)*d2}px), calc(-50% + ${Math.sin(r2)*d2-80}px)) scale(1.8)`}
+          ], {duration:1000, easing:'ease-out', fill:'forwards'}).onfinish = () => p2.remove();
+        }
+      }, 200 + w * 350);
+    }
+  }
+}
+
+function showBossOverlay(name) {
+  const ov = document.getElementById('boss-overlay');
+  document.getElementById('boss-msg').textContent = 'BOSS DEFEATED!';
+  document.getElementById('boss-sub').textContent = `"${name}" — you are incredible! 🏆`;
+  ov.classList.add('show');
+  setTimeout(() => ov.classList.remove('show'), 3400);
+}
+
+// ── TASK TOGGLE ──────────────────────────────────────────────────────────────
+function toggleTask(kid, id, pts) {
+  checkDayReset();
+  const row = document.getElementById('row-' + id);
+  if (S.todayCompleted[kid][id]) {
+    delete S.todayCompleted[kid][id];
+    S.allTimePts[kid] = Math.max(0, S.allTimePts[kid] - pts);
+  } else {
+    S.todayCompleted[kid][id] = true;
+    S.allTimePts[kid] += pts;
+    if (pts > 0 && row) launchParticles(row, false);
+    if (row) { row.classList.add('flash-green'); setTimeout(()=>row.classList.remove('flash-green'),600); }
+  }
+  saveState();
+  updateKidMetrics(kid);
+  refreshRewards(kid);
+  updateCheckmarks(kid);
+  refreshLeaderboardIfVisible();
+}
+
+// ── BOSS TOGGLE — kids REQUEST completion, parents APPROVE ───────────────────
+function requestBoss(kid, id, pts, name) {
+  // Already approved
+  if (S.bossCompleted[kid] && S.bossCompleted[kid][id]) return;
+  // Already pending — cancel the request
+  const existingIdx = S.pendingBoss.findIndex(p => p.kid === kid && p.id === id);
+  if (existingIdx !== -1) {
+    if (!confirm('Cancel your completion request for "' + name + '"?')) return;
+    S.pendingBoss.splice(existingIdx, 1);
+    saveState();
+    refreshBossCard(kid, id, pts, name);
+    return;
+  }
+  // New request
+  S.pendingBoss.push({ kid, id, pts, name, requestedAt: new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}) });
+  saveState();
+  // Celebration animation for the kid — they earned it, pending approval
+  const card = document.getElementById('boss-card-' + id);
+  if (card) launchParticles(card, true);
+  showBossOverlay('Request sent to Mom or Dad! 🎉');
+  refreshBossCard(kid, id, pts, name);
+}
+
+function refreshBossCard(kid, id, pts, name) {
+  const card = document.getElementById('boss-card-' + id);
+  if (!card) return;
+  const approved = !!(S.bossCompleted[kid] && S.bossCompleted[kid][id]);
+  const pending  = S.pendingBoss.some(p => p.kid === kid && p.id === id);
+  const chk = card.querySelector('.boss-check');
+  const title = card.querySelector('.boss-title');
+  if (approved) {
+    card.classList.add('done-boss');
+    title.classList.add('done-boss');
+    chk.className = 'boss-check done';
+    chk.textContent = '✓';
+  } else if (pending) {
+    card.classList.remove('done-boss');
+    title.classList.remove('done-boss');
+    chk.className = 'boss-check pending-check';
+    chk.textContent = '⏳';
+  } else {
+    card.classList.remove('done-boss');
+    title.classList.remove('done-boss');
+    chk.className = 'boss-check';
+    chk.textContent = '';
+  }
+}
+
+function approveBoss(kid, id) {
+  const pending = S.pendingBoss.find(p => p.kid === kid && p.id === id);
+  if (!pending) return;
+  S.bossCompleted[kid][id] = true;
+  S.allTimePts[kid] += pending.pts;
+  S.pendingBoss = S.pendingBoss.filter(p => !(p.kid === kid && p.id === id));
+  saveState();
+  updateKidMetrics(kid);
+  refreshRewards(kid);
+  refreshLeaderboardIfVisible();
+  renderApprovalQueue();
+}
+
+function rejectBoss(kid, id) {
+  const pending = S.pendingBoss.find(p => p.kid === kid && p.id === id);
+  if (!pending) return;
+  if (!confirm('Reject "' + pending.name + '" for ' + {evie:'Evie',fiona:'Fiona',lucy:'Lucy'}[kid] + '? They can re-submit when ready.')) return;
+  S.pendingBoss = S.pendingBoss.filter(p => !(p.kid === kid && p.id === id));
+  saveState();
+  renderApprovalQueue();
+}
+
+function renderApprovalQueue() {
+  const el = document.getElementById('approval-queue');
+  if (!el) return;
+  const names = {evie:'Evie',fiona:'Fiona',lucy:'Lucy'};
+  const avCls = {evie:'av-evie',fiona:'av-fiona',lucy:'av-lucy'};
+  const badge = document.getElementById('approval-badge');
+  const count = S.pendingBoss.length;
+  if (badge) badge.textContent = count > 0 ? count : '';
+  if (count === 0) {
+    el.innerHTML = '<div style="font-size:13px;font-weight:700;color:var(--text-tertiary);padding:8px 0;">No pending approvals — all clear! ✓</div>';
+    return;
+  }
+  el.innerHTML = S.pendingBoss.map(p => `
+    <div style="display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1.5px solid var(--border-light);">
+      <div class="kid-avatar ${avCls[p.kid]}" style="width:44px;height:44px;font-size:18px;flex-shrink:0;">${names[p.kid][0]}</div>
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:0.06em;color:#791F1F;margin-bottom:2px;">Boss Challenge</div>
+        <div style="font-size:15px;font-weight:900;color:var(--text-primary);">${p.name}</div>
+        <div style="font-size:12px;font-weight:700;color:var(--text-secondary);margin-top:2px;">${names[p.kid]} · +${p.pts} pts · submitted ${p.requestedAt}</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:7px;flex-shrink:0;">
+        <button onclick="approveBoss('${p.kid}','${p.id}')"
+          style="padding:8px 16px;border-radius:var(--radius-pill);border:none;background:#1D9E75;color:#fff;font-size:13px;font-weight:900;font-family:'Nunito',sans-serif;cursor:pointer;">
+          ✓ Approve
+        </button>
+        <button onclick="rejectBoss('${p.kid}','${p.id}')"
+          style="padding:8px 16px;border-radius:var(--radius-pill);border:1.5px solid #E24B4A;background:transparent;color:#E24B4A;font-size:13px;font-weight:900;font-family:'Nunito',sans-serif;cursor:pointer;">
+          ✕ Reject
+        </button>
+      </div>
+    </div>`).join('');
+}
+
+// ── STREAK ───────────────────────────────────────────────────────────────────
+function markStreakDay(kid) {
+  const dow = todayDOW();
+  if (S.weekStreak[kid][dow]) return;
+  S.weekStreak[kid][dow] = true;
+  S.currentStreak[kid]++;
+  S.allTimeStreak[kid]++;
+  saveState();
+  updateKidMetrics(kid);
+  refreshLeaderboardIfVisible();
+  const sec = document.getElementById(kid + '-streak-section');
+  if (sec) sec.outerHTML = buildStreakSection(kid);
+}
+
+function buildStreakSection(kid) {
+  const days = S.weekStreak[kid];
+  const dow = todayDOW();
+  const count = S.currentStreak[kid];
+  const dayLabels = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const dots = days.map((on,i) => `
+    <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+      <div class="streak-dot ${on?'on':i===dow&&!on?'today-dot':''}">${on?'🔥':''}</div>
+      <span style="font-size:10px;font-weight:900;color:var(--text-tertiary);">${dayLabels[i][0]}</span>
+    </div>`).join('');
+  const todayDone = days[dow];
+  return `<div class="card" id="${kid}-streak-section">
+    <div class="section-label">Weekly streak</div>
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:12px;">
+      <span style="font-size:26px;font-weight:900;">${count}</span>
+      <span class="flame" style="font-size:24px;">🔥</span>
+      <span style="font-size:13px;font-weight:700;color:var(--text-secondary);">${count>=5?'On fire this week!':count>=3?'Keep it going!':'Keep going!'}</span>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">${dots}</div>
+    ${todayDone
+      ? `<div style="font-size:13px;font-weight:900;color:#1D9E75;">Today is done! 🎉</div>`
+      : `<button class="streak-btn" onclick="markStreakDay('${kid}')">Mark today done! 🔥</button>`}
+  </div>`;
+}
+
+// ── BOSS SECTION ─────────────────────────────────────────────────────────────
+function buildBossSection(kid) {
+  return `<div style="margin-bottom:14px;">
+    <div class="section-label" style="margin-bottom:10px;">Boss challenges</div>
+    ${BOSS[kid].map(b => {
+      const approved = !!(S.bossCompleted[kid] && S.bossCompleted[kid][b.id]);
+      const pending  = S.pendingBoss.some(p => p.kid === kid && p.id === b.id);
+      const chkClass = approved ? 'boss-check done' : pending ? 'boss-check pending-check' : 'boss-check';
+      const chkIcon  = approved ? '✓' : pending ? '⏳' : '';
+      const statusLabel = approved
+        ? '<span style="font-size:11px;font-weight:900;color:#1D9E75;">✓ Approved!</span>'
+        : pending
+        ? '<span style="font-size:11px;font-weight:900;color:#EF9F27;">⏳ Waiting for parent approval — tap to cancel</span>'
+        : '<span style="font-size:11px;font-weight:700;color:var(--text-tertiary);">Tap when completed!</span>';
+      return `<div class="boss-card \${approved?'done-boss':''}" id="boss-card-\${b.id}"
+        onclick="requestBoss('\${kid}','\${b.id}',\${b.pts},\${JSON.stringify(b.name)})">
+        <div style="display:flex;align-items:flex-start;gap:12px;">
+          <span style="font-size:32px;flex-shrink:0;line-height:1.1;">\${b.emoji}</span>
+          <div style="flex:1;">
+            <div class="boss-badge">Boss Challenge</div>
+            <div class="boss-title \${approved?'done-boss':''}">\${b.name}</div>
+            <div class="boss-desc">\${b.desc}</div>
+            <div style="margin-top:5px;">\${statusLabel}</div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:5px;flex-shrink:0;">
+            <div class="\${chkClass}">\${chkIcon}</div>
+            <span class="boss-pts">+\${b.pts}</span>
+          </div>
+        </div>
+      </div>`;
+    }).join('')}
+  </div>`;
+}
+
+// ── KID VIEW ─────────────────────────────────────────────────────────────────
+function buildKidView(kid, name) {
+  checkDayReset();
+  const tasks = todayTasks(kid);
+  const pts = S.allTimePts[kid];
+  const sc = S.currentStreak[kid];
+  const bc = Object.keys(S.bossCompleted[kid]).length;
+  const dow = todayDOW();
+  const dayNames = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const focusCat = CAT_SCHEDULE[kid][dow];
+  const pct = S.pcts[kid];
+  const avCls = {evie:'av-evie',fiona:'av-fiona',lucy:'av-lucy'}[kid];
+
+  const cats = [...new Set(tasks.map(t => t.cat))];
+  let taskHTML = '';
+  cats.forEach(cat => {
+    const ct = tasks.filter(t => t.cat === cat);
+    taskHTML += `<div class="section-label" style="margin-top:14px;">${catLabel(cat)}</div>`;
+    ct.forEach(t => {
+      const done = !!S.todayCompleted[kid][t.id];
+      taskHTML += `<div class="task-row" id="row-${t.id}" onclick="toggleTask('${kid}','${t.id}',${t.pts})">
+        <div class="task-check ${done?'done':''}" id="chk-${t.id}">${done?'✓':''}</div>
+        <div style="flex:1;">
+          <div class="task-name ${done?'done':''}" id="nm-${t.id}">${t.name}${t.daily?'<span class="daily-tag">daily</span>':''}</div>
+          <span class="cat-badge ${CAT_COLORS[cat].badge}">${catLabel(cat)}</span>
+        </div>
+        <span class="task-pts">${t.pts>0?'+'+t.pts:'—'} pts</span>
+      </div>`;
+    });
+  });
+
+  const barHTML = Object.entries(pct).map(([cat,val]) => `
+    <div style="margin-bottom:8px;">
+      <div style="display:flex;justify-content:space-between;margin-bottom:3px;">
+        <span style="font-size:12px;font-weight:700;color:var(--text-secondary);">${catLabel(cat)}</span>
+        <span style="font-size:12px;font-weight:900;color:var(--text-secondary);">${val}%</span>
+      </div>
+      <div class="progress-wrap"><div class="progress-fill" style="width:${val}%;background:${CAT_COLORS[cat].bar};"></div></div>
+    </div>`).join('');
+
+  const rewardHTML = REWARDS[kid].map(r => {
+    const need = Math.ceil(r.cost / RATE);
+    const can = pts >= need;
+    return `<div class="reward-row">
+      <span class="reward-name">${r.name}</span>
+      <span class="reward-cost" style="margin-right:8px;">$${r.cost}</span>
+      <span class="${can?'badge-unlock':'badge-locked'}">${can?'✓ Unlocked':need-pts+' pts away'}</span>
+    </div>`;
+  }).join('');
+
+  return `
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:1.2rem;">
+      <div class="kid-avatar ${avCls}">${name[0]}</div>
+      <div>
+        <div style="font-size:24px;font-weight:900;color:var(--text-primary);">${name}</div>
+        <div style="font-size:12px;font-weight:700;color:var(--text-secondary);">${formatDate()}</div>
+      </div>
+    </div>
+    <div class="metric-grid metric-grid-4">
+      <div class="metric-card"><div class="metric-val" id="${kid}-pts-disp">${pts}</div><div class="metric-lbl">total points</div></div>
+      <div class="metric-card"><div class="metric-val">$<span id="${kid}-dollars-disp">${dollar(pts)}</span></div><div class="metric-lbl">total earned</div></div>
+      <div class="metric-card"><div class="metric-val"><span id="${kid}-streak-disp">${sc}</span> <span class="flame">🔥</span></div><div class="metric-lbl">day streak</div></div>
+      <div class="metric-card"><div class="metric-val">${bc}</div><div class="metric-lbl">bosses done</div></div>
+    </div>
+    <div class="focus-banner">
+      Today is <strong>${dayNames[dow]}</strong> — focus: <strong style="color:${CAT_COLORS[focusCat].bar};">${catLabel(focusCat)}</strong> + your daily tasks
+    </div>
+    ${buildStreakSection(kid)}
+    ${buildBossSection(kid)}
+    <div class="card"><div class="section-label">Activity mix</div>${barHTML}</div>
+    <div class="card"><div class="section-label">Today's tasks</div>${taskHTML}</div>
+    <div class="card"><div class="section-label">Reward store</div><div id="${kid}-rewards">${rewardHTML}</div></div>
+  `;
+}
+
+// ── LEADERBOARD ──────────────────────────────────────────────────────────────
+function buildLeaderboard() {
+  const kids = ['evie','fiona','lucy'];
+  const names = {evie:'Evie',fiona:'Fiona',lucy:'Lucy'};
+  const avCls = {evie:'av-evie',fiona:'av-fiona',lucy:'av-lucy'};
+  const sorted = [...kids].sort((a,b) => S.allTimePts[b] - S.allTimePts[a]);
+  const podClass = ['gold','silver','bronze'];
+  const medals = ['🥇','🥈','🥉'];
+
+  const podCards = sorted.map((kid,rank) => {
+    const pts = S.allTimePts[kid];
+    const sc = S.currentStreak[kid];
+    const bc = Object.keys(S.bossCompleted[kid]).length;
+    const ptColor = rank===0?'#854F0B':rank===1?'#5F5E5A':'#085041';
+    return `<div class="lb-pod ${podClass[rank]}" style="${rank===0?'padding-top:20px;':''}">
+      <div class="lb-medal">${medals[rank]}</div>
+      <div class="kid-avatar ${avCls[kid]}" style="margin:0 auto 8px;">${names[kid][0]}</div>
+      <div class="lb-name">${names[kid]}</div>
+      <div class="lb-pts-big" style="color:${ptColor};">${pts}</div>
+      <div class="lb-sub">points</div>
+      <div class="lb-sub" style="margin-top:2px;">$${dollar(pts)} earned</div>
+      <div style="font-size:13px;font-weight:900;margin-top:5px;">${sc}🔥 streak</div>
+      <div style="font-size:12px;font-weight:900;color:#791F1F;margin-top:2px;">${bc} boss${bc===1?'':'es'}</div>
+    </div>`;
+  }).join('');
+
+  const bossRows = kids.map(kid => {
+    const bDone = BOSS[kid].filter(b => S.bossCompleted[kid][b.id]);
+    const bLeft = BOSS[kid].filter(b => !S.bossCompleted[kid][b.id]);
+    return `<div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1.5px solid var(--border-light);">
+      <div class="kid-avatar ${avCls[kid]}" style="width:42px;height:42px;font-size:17px;">${names[kid][0]}</div>
+      <div style="flex:1;">
+        <div style="font-size:15px;font-weight:900;color:var(--text-primary);">${names[kid]}</div>
+        <div style="font-size:12px;font-weight:700;color:#791F1F;margin-top:2px;">${bDone.length>0?bDone.map(b=>`${b.emoji} ${b.name}`).join(' · '):'No bosses defeated yet'}</div>
+        ${bLeft.length>0?`<div style="font-size:11px;font-weight:700;color:var(--text-tertiary);margin-top:1px;">Up next: ${bLeft[0].emoji} ${bLeft[0].name}</div>`:''}
+      </div>
+      <div style="text-align:right;flex-shrink:0;">
+        <div style="font-size:20px;font-weight:900;color:var(--text-primary);">${bDone.length}/${BOSS[kid].length}</div>
+        <div style="font-size:10px;font-weight:700;color:var(--text-secondary);">defeated</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  const statRows = kids.map(kid => `
+    <div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1.5px solid var(--border-light);">
+      <div class="kid-avatar ${avCls[kid]}" style="width:38px;height:38px;font-size:15px;">${names[kid][0]}</div>
+      <div style="flex:1;">
+        <div style="font-size:15px;font-weight:900;color:var(--text-primary);">${names[kid]}</div>
+        <div style="font-size:11px;font-weight:700;color:var(--text-secondary);">Tasks today: ${Object.keys(S.todayCompleted[kid]).length} · All-time streak days: ${S.allTimeStreak[kid]}</div>
+      </div>
+      <div style="font-size:22px;font-weight:900;color:var(--text-primary);">${S.allTimePts[kid]}</div>
+    </div>`).join('');
+
+  return `
+    <div style="text-align:center;margin-bottom:1.4rem;">
+      <div style="font-size:28px;font-weight:900;color:var(--text-primary);">Family Leaderboard</div>
+      <div style="font-size:14px;font-weight:700;color:var(--text-secondary);margin-top:4px;">${formatDate()}</div>
+    </div>
+    <div class="lb-podium">${podCards}</div>
+    <div class="card"><div class="section-label" style="margin-bottom:10px;">Boss battles</div>${bossRows}</div>
+    <div class="card">
+      <div class="section-label" style="margin-bottom:8px;">All-time stats</div>
+      ${statRows}
+      <div style="padding-top:10px;font-size:11px;font-weight:700;color:var(--text-tertiary);border-top:1.5px solid var(--border-light);margin-top:4px;">Points accumulate all summer · Daily tasks reset each morning · Bosses are permanent</div>
+    </div>
+  `;
+}
+
+// ── DASHBOARD ────────────────────────────────────────────────────────────────
+function buildDashboard() {
+  const kids = ['evie','fiona','lucy'];
+  const names = {evie:'Evie (10)',fiona:'Fiona (8)',lucy:'Lucy (5)'};
+  const avCls = {evie:'av-evie',fiona:'av-fiona',lucy:'av-lucy'};
+  const catSeq = {
+    evie:  ['chore','school','skill','play','screen','play','skill'],
+    fiona: ['chore','school','skill','play','screen','play','skill'],
+    lucy:  ['chore','school','play','skill','play','screen','play'],
+  };
+  const dayLabels = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+  const kidBlocks = kids.map(kid => {
+    const pct = S.pcts[kid];
+    const bc = Object.keys(S.bossCompleted[kid]).length;
+    const bNames = BOSS[kid].filter(b=>S.bossCompleted[kid][b.id]).map(b=>`${b.emoji} ${b.name}`).join(', ') || 'None yet';
+    const bars = Object.entries(pct).map(([cat,val]) => `
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+        <span style="font-size:11px;font-weight:700;color:var(--text-secondary);width:56px;">${catLabel(cat)}</span>
+        <div style="flex:1;background:var(--bg-secondary);border-radius:20px;height:6px;overflow:hidden;"><div style="width:${val}%;height:100%;border-radius:20px;background:${CAT_COLORS[cat].bar};"></div></div>
+        <span style="font-size:11px;font-weight:900;color:var(--text-secondary);width:28px;text-align:right;">${val}%</span>
+      </div>`).join('');
+    const sliders = Object.entries(pct).map(([cat,val]) => `
+      <div class="pct-row">
+        <label>${catLabel(cat)}</label>
+        <input type="range" min="0" max="60" step="5" value="${val}" oninput="updatePct('${kid}','${cat}',this.value)">
+        <span class="pct-val" id="pct-${kid}-${cat}">${val}%</span>
+      </div>`).join('');
+    const total = Object.values(pct).reduce((a,b)=>a+b,0);
+    const warn = total!==100?`<div style="font-size:11px;font-weight:700;color:#E24B4A;margin-top:4px;">Total is ${total}% — needs to be 100%</div>`:'';
+    const weekCells = dayLabels.map((day,i) => {
+      const cat = catSeq[kid][i];
+      const sample = TASKS[kid].filter(t=>t.cat===cat).slice(0,2);
+      const items = sample.map(t=>`<div class="day-task" style="background:${CAT_COLORS[cat].bar}22;color:${CAT_COLORS[cat].bar};">${t.name.length>13?t.name.slice(0,12)+'…':t.name}</div>`).join('');
+      return `<div class="day-cell"><div class="day-hdr">${day[0]}</div>${items}</div>`;
+    }).join('');
+
+    return `<div style="padding:16px 0;border-bottom:1.5px solid var(--border-light);">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">
+        <div class="kid-avatar ${avCls[kid]}" style="width:44px;height:44px;font-size:18px;">${kid[0].toUpperCase()}</div>
+        <div style="flex:1;">
+          <div style="font-size:16px;font-weight:900;color:var(--text-primary);">${names[kid]}</div>
+          <div style="font-size:11px;font-weight:700;color:var(--text-secondary);">${S.currentStreak[kid]}🔥 streak · ${bc} boss${bc===1?'':'es'} defeated</div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-size:20px;font-weight:900;color:var(--text-primary);">${S.allTimePts[kid]} pts</div>
+          <div style="font-size:13px;font-weight:700;color:var(--text-secondary);">$${dollar(S.allTimePts[kid])}</div>
+        </div>
+      </div>
+      <div style="font-size:11px;font-weight:700;color:#791F1F;margin-bottom:10px;">Bosses: ${bNames}</div>
+      ${bars}
+      <details style="margin-top:8px;">
+        <summary>⚙️ Adjust activity mix</summary>
+        <div style="margin-top:8px;">${sliders}${warn}</div>
+      </details>
+      <div style="margin-top:12px;"><div class="section-label" style="margin-bottom:5px;">Sample week</div><div class="week-grid">${weekCells}</div></div>
+    </div>`;
+  }).join('');
+
+  return `
+    <div style="margin-bottom:1.4rem;">
+      <div style="font-size:22px;font-weight:900;color:var(--text-primary);">Parent dashboard</div>
+      <div style="font-size:13px;font-weight:700;color:var(--text-secondary);margin-top:3px;">${formatDate()} · Adjust mix · review boss progress</div>
+    </div>
+    <div class="card" style="border-color:${S.pendingBoss.length>0?'#EF9F27':'var(--border-light)'};">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+        <div class="section-label" style="margin-bottom:0;">Boss approval queue</div>
+        <span id="approval-badge" style="display:inline-flex;align-items:center;justify-content:center;min-width:22px;height:22px;border-radius:var(--radius-pill);background:#E24B4A;color:#fff;font-size:12px;font-weight:900;padding:0 6px;">${S.pendingBoss.length>0?S.pendingBoss.length:''}</span>
+      </div>
+      <div id="approval-queue"></div>
+    </div>
+    <div class="card">${kidBlocks}</div>
+    ${buildCustomTaskCard()}
+    <div class="card-secondary">
+      <div class="section-label">Points → dollars</div>
+      <div style="font-size:13px;font-weight:700;color:var(--text-secondary);margin-top:6px;line-height:1.7;">Every point = <strong>$0.05</strong>. Points & boss completions are permanent. Daily task checkboxes reset each morning.</div>
+      <div style="display:flex;align-items:center;gap:10px;margin-top:12px;">
+        <span style="font-size:13px;font-weight:700;color:var(--text-secondary);">Rate: $<span id="rate-disp">0.05</span>/pt</span>
+        <input type="range" min="1" max="20" step="1" value="5" style="flex:1;" oninput="document.getElementById('rate-disp').textContent=(this.value/100).toFixed(2)">
+      </div>
+    </div>
+    <div class="card-secondary">
+      <div class="section-label" style="margin-bottom:8px;">Reset / danger zone</div>
+      <div style="font-size:13px;font-weight:700;color:var(--text-secondary);margin-bottom:10px;">Use these carefully — resets are permanent.</div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <button class="action-btn" onclick="resetDay()" style="border-color:#E24B4A;color:#E24B4A;">Reset today's tasks</button>
+        <button class="action-btn" onclick="resetAll()" style="border-color:#A32D2D;color:#A32D2D;">Reset ALL data</button>
+      </div>
+    </div>
+  `;
+}
+
+// ── UPDATE HELPERS ────────────────────────────────────────────────────────────
+function updateKidMetrics(kid) {
+  const pts = document.getElementById(kid+'-pts-disp');
+  const dl = document.getElementById(kid+'-dollars-disp');
+  const sc = document.getElementById(kid+'-streak-disp');
+  if (pts) { pts.textContent = S.allTimePts[kid]; pts.classList.add('bounce-in'); setTimeout(()=>pts.classList.remove('bounce-in'),400); }
+  if (dl) dl.textContent = dollar(S.allTimePts[kid]);
+  if (sc) sc.textContent = S.currentStreak[kid];
+}
+
+function updateCheckmarks(kid) {
+  todayTasks(kid).forEach(t => {
+    const chk = document.getElementById('chk-'+t.id);
+    const nm = document.getElementById('nm-'+t.id);
+    if (!chk) return;
+    const done = !!S.todayCompleted[kid][t.id];
+    chk.className = 'task-check' + (done?' done':'');
+    chk.textContent = done ? '✓' : '';
+    if (nm) nm.className = 'task-name' + (done?' done':'');
+  });
+}
+
+function refreshRewards(kid) {
+  const el = document.getElementById(kid+'-rewards');
+  if (!el) return;
+  const pts = S.allTimePts[kid];
+  el.innerHTML = REWARDS[kid].map(r => {
+    const need = Math.ceil(r.cost/RATE);
+    const can = pts >= need;
+    return `<div class="reward-row">
+      <span class="reward-name">${r.name}</span>
+      <span class="reward-cost" style="margin-right:8px;">$${r.cost}</span>
+      <span class="${can?'badge-unlock':'badge-locked'}">${can?'✓ Unlocked':need-pts+' pts away'}</span>
+    </div>`;
+  }).join('');
+}
+
+function refreshLeaderboardIfVisible() {
+  const el = document.getElementById('view-leaderboard');
+  if (el && el.style.display !== 'none') el.innerHTML = buildLeaderboard();
+}
+
+function updatePct(kid, cat, val) {
+  S.pcts[kid][cat] = parseInt(val);
+  saveState();
+  const el = document.getElementById('pct-'+kid+'-'+cat);
+  if (el) el.textContent = val + '%';
+}
+
+// ── RESET ─────────────────────────────────────────────────────────────────────
+function resetDay() {
+  if (!confirm('Reset today\'s task checkboxes for all three kids? Points already earned today will be removed.')) return;
+  ['evie','fiona','lucy'].forEach(kid => {
+    const allTasks = [...TASKS[kid], ...(S.customTasks[kid]||[])];
+    const todayPtsToRemove = Object.entries(S.todayCompleted[kid]).reduce((sum,[id]) => {
+      const t = allTasks.find(t=>t.id===id);
+      return sum + (t?t.pts:0);
+    }, 0);
+    S.allTimePts[kid] = Math.max(0, S.allTimePts[kid] - todayPtsToRemove);
+    S.todayCompleted[kid] = {};
+  });
+  S.todayKey = '';
+  saveState();
+  location.reload();
+}
+
+function resetAll() {
+  if (!confirm('⚠️ This will erase ALL points, streaks, and boss completions for all three kids. Are you sure?')) return;
+  localStorage.removeItem('summerTracker2026');
+  location.reload();
+}
+
+
+// ── CUSTOM TASKS ──────────────────────────────────────────────────────────────
+function addCustomTask() {
+  const nameEl = document.getElementById('ct-name');
+  const catEl  = document.getElementById('ct-cat');
+  const ptsEl  = document.getElementById('ct-pts');
+  const kidEl  = document.getElementById('ct-kid');
+  const daily  = document.getElementById('ct-daily').checked;
+
+  const name = nameEl.value.trim();
+  const cat  = catEl.value;
+  const pts  = parseInt(ptsEl.value);
+  const kid  = kidEl.value;
+
+  if (!name) { nameEl.focus(); return; }
+
+  const id = 'custom_' + Date.now();
+  if (!S.customTasks[kid]) S.customTasks[kid] = [];
+  S.customTasks[kid].push({ id, name, cat, pts, daily, custom: true });
+  saveState();
+
+  // Reset form
+  nameEl.value = '';
+  ptsEl.value = 10;
+  updatePtsPreviews();
+
+  // Refresh dashboard custom task list
+  refreshCustomTaskList();
+
+  // Show confirmation
+  const btn = document.getElementById('add-task-btn');
+  const orig = btn.textContent;
+  btn.textContent = '✓ Added!';
+  btn.style.background = '#1D9E75';
+  setTimeout(() => { btn.textContent = orig; btn.style.background = ''; }, 1400);
+}
+
+function deleteCustomTask(kid, id) {
+  S.customTasks[kid] = (S.customTasks[kid]||[]).filter(t => t.id !== id);
+  delete S.todayCompleted[kid][id];
+  saveState();
+  refreshCustomTaskList();
+}
+
+function updatePtsPreviews() {
+  const val = parseInt(document.getElementById('ct-pts')?.value || 10);
+  const ptsDisp = document.getElementById('ct-pts-val');
+  const dolDisp = document.getElementById('ct-pts-dollar');
+  if (ptsDisp) ptsDisp.textContent = val + ' pts';
+  if (dolDisp) dolDisp.textContent = '$' + dollar(val) + ' per completion';
+}
+
+function refreshCustomTaskList() {
+  const el = document.getElementById('custom-task-list');
+  if (!el) return;
+  const kids = ['evie','fiona','lucy'];
+  const names = {evie:'Evie',fiona:'Fiona',lucy:'Lucy'};
+  const avCls = {evie:'av-evie',fiona:'av-fiona',lucy:'av-lucy'};
+  let all = [];
+  kids.forEach(kid => (S.customTasks[kid]||[]).forEach(t => all.push({...t, kid})));
+
+  if (all.length === 0) {
+    el.innerHTML = '<div style="font-size:13px;font-weight:700;color:var(--text-tertiary);padding:8px 0;">No custom tasks yet — add one above!</div>';
+    return;
+  }
+
+  el.innerHTML = all.map(t => `
+    <div class="custom-task-row">
+      <div class="kid-avatar ${avCls[t.kid]}" style="width:30px;height:30px;font-size:12px;flex-shrink:0;">${names[t.kid][0]}</div>
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:14px;font-weight:700;color:var(--text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${t.name}</div>
+        <div style="display:flex;gap:6px;margin-top:3px;flex-wrap:wrap;">
+          <span class="cat-badge ${CAT_COLORS[t.cat]?.badge || 'cat-chore'}">${catLabel(t.cat)}</span>
+          ${t.daily ? '<span style="font-size:10px;font-weight:700;color:var(--text-tertiary);">daily</span>' : ''}
+        </div>
+      </div>
+      <div style="text-align:right;flex-shrink:0;margin-right:8px;">
+        <div style="font-size:14px;font-weight:900;color:var(--text-secondary);">+${t.pts} pts</div>
+        <div style="font-size:11px;font-weight:700;color:var(--text-tertiary);">$${dollar(t.pts)}</div>
+      </div>
+      <button class="delete-btn" onclick="deleteCustomTask('${t.kid}','${t.id}')" title="Remove task">✕</button>
+    </div>`).join('');
+}
+
+function buildCustomTaskCard() {
+  return `<div class="card">
+    <div class="section-label" style="margin-bottom:14px;">➕ Add custom task</div>
+
+    <div class="form-group">
+      <label class="form-label">Task / activity name</label>
+      <input class="form-input" id="ct-name" type="text" placeholder="e.g. Clean the pool deck, Practice piano..." maxlength="80"
+        oninput="document.getElementById('add-task-btn').disabled=!this.value.trim()">
+    </div>
+
+    <div class="form-grid-2">
+      <div class="form-group">
+        <label class="form-label">Assign to</label>
+        <select class="form-select" id="ct-kid">
+          <option value="evie">Evie (10)</option>
+          <option value="fiona">Fiona (8)</option>
+          <option value="lucy">Lucy (5)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Category</label>
+        <select class="form-select" id="ct-cat">
+          <option value="chore">Chore</option>
+          <option value="school">Scholastic</option>
+          <option value="skill">Life Skill</option>
+          <option value="play">Play</option>
+          <option value="screen">Screen</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Point value</label>
+      <input type="range" id="ct-pts" min="1" max="100" step="1" value="10"
+        style="width:100%;margin-bottom:6px;" oninput="updatePtsPreviews()">
+      <div class="pts-display">
+        <span class="pts-big" id="ct-pts-val">10 pts</span>
+        <span class="pts-dollar" id="ct-pts-dollar">$0.50 per completion</span>
+      </div>
+    </div>
+
+    <div class="form-group" style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+      <input type="checkbox" id="ct-daily" style="width:18px;height:18px;cursor:pointer;accent-color:#1D9E75;">
+      <label for="ct-daily" style="font-size:14px;font-weight:700;color:var(--text-secondary);cursor:pointer;">Show every day (daily task)</label>
+    </div>
+
+    <button class="add-btn" id="add-task-btn" onclick="addCustomTask()" disabled>Add task</button>
+
+    <div style="margin-top:18px;">
+      <div class="section-label" style="margin-bottom:8px;">Custom tasks added</div>
+      <div id="custom-task-list"></div>
+    </div>
+  </div>`;
+}
+
+// ── VIEW SWITCHING ────────────────────────────────────────────────────────────
+function showView(v, btn) {
+  ['leaderboard','evie','fiona','lucy','dashboard'].forEach(id => {
+    document.getElementById('view-'+id).style.display = 'none';
+  });
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+
+  const el = document.getElementById('view-'+v);
+  el.style.display = 'block';
+
+  if (v === 'leaderboard') el.innerHTML = buildLeaderboard();
+  else if (v === 'evie')   el.innerHTML = buildKidView('evie','Evie');
+  else if (v === 'fiona')  el.innerHTML = buildKidView('fiona','Fiona');
+  else if (v === 'lucy')   el.innerHTML = buildKidView('lucy','Lucy');
+  else if (v === 'dashboard') { el.innerHTML = buildDashboard(); refreshCustomTaskList(); renderApprovalQueue(); }
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+checkDayReset();
+document.getElementById('header-date').textContent = formatDate();
+document.getElementById('view-leaderboard').innerHTML = buildLeaderboard();
+</script>
+</body>
+</html>
